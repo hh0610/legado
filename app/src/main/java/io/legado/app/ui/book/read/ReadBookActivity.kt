@@ -1305,8 +1305,19 @@ class ReadBookActivity : BaseReadBookActivity(),
         success: (() -> Unit)?
     ) {
         lifecycleScope.launch {
+            val issue885Before =
+                if (relativePosition == 0 && binding.readView.isScroll) {
+                    binding.readView.issue885TraceState()
+                } else null
             binding.readView.cancelTouchGestures()
             binding.readView.upContent(relativePosition, resetPageOffset)
+            issue885Before?.let {
+                LogUtils.d(
+                    "Issue885",
+                    "apply relative=$relativePosition reset=$resetPageOffset " +
+                        "before=[$it] after=[${binding.readView.issue885TraceState()}]"
+                )
+            }
             observeBookmarks()
             upBookmarkIndicator()
             if (relativePosition == 0) {
@@ -2689,8 +2700,17 @@ class ReadBookActivity : BaseReadBookActivity(),
             }
         }
         observeEvent<ArrayList<Int>>(EventBus.UP_CONFIG) { values ->
+            val issue885Before = if (5 in values) readView.issue885TraceState() else null
             if (5 in values && isInitFinish) {
                 updateScrollReadPosition()
+            }
+            issue885Before?.let {
+                LogUtils.d(
+                    "Issue885",
+                    "upConfig values=$values init=$isInitFinish " +
+                        "reloadRequested=$isInitFinish before=[$it] " +
+                        "savedAfter=${ReadBook.durChapterIndex}:${ReadBook.durChapterPos}"
+                )
             }
             values.forEach { value ->
                 when (value) {

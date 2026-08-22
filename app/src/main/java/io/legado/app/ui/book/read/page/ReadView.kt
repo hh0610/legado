@@ -1067,6 +1067,20 @@ class ReadView(context: Context, attrs: AttributeSet) :
         return curPage.getReadPosition()
     }
 
+    internal fun issue885TraceState(): String {
+        val visible = getReadPosition()
+        val top = getCurVisiblePage().lines.firstOrNull()
+        val delegate = pageDelegate
+        val chapter = ReadBook.curTextChapter
+        return "layoutRef=${chapter?.let { System.identityHashCode(it) }} " +
+            "layoutDone=${chapter?.isCompleted} " +
+            "saved=${ReadBook.durChapterIndex}:${ReadBook.durChapterPos} " +
+            "visible=${visible?.first}:${visible?.second?.chapterPosition} " +
+            "top=${top?.chapterPosition}@${top?.lineTop} " +
+            "down=$pressDown moved=$isMove delegateMoved=${delegate?.isMoved} " +
+            "running=${delegate?.isRunning} started=${delegate?.isStarted}"
+    }
+
     fun getReadAloudPos(): Pair<Int, TextLine>? {
         if (replacePreview != null) return null
         return curPage.getReadAloudPos()

@@ -38,6 +38,7 @@ import io.legado.app.ui.book.read.page.entities.TextChapter
 import io.legado.app.ui.book.read.page.provider.ChapterProvider
 import io.legado.app.ui.book.read.page.provider.LayoutProgressListener
 import io.legado.app.utils.GSON
+import io.legado.app.utils.LogUtils
 import io.legado.app.utils.postEvent
 import io.legado.app.utils.putPrefString
 import io.legado.app.utils.stackTraceStr
@@ -1062,7 +1063,17 @@ object ReadBook : CoroutineScope by MainScope() {
         Coroutine.async {
             val book = book!!
             val chapter = appDb.bookChapterDao.getChapter(book.bookUrl, index) ?: return@async
-            if (addLoading(index)) {
+            val accepted = addLoading(index)
+            if (index == durChapterIndex && resetPageOffset) {
+                LogUtils.d(
+                    "Issue885",
+                    "loadContent index=$index dur=$durChapterIndex upContent=$upContent " +
+                        "reset=$resetPageOffset accepted=$accepted " +
+                        "layoutRef=${curTextChapter?.let { System.identityHashCode(it) }} " +
+                        "saved=$durChapterIndex:$durChapterPos"
+                )
+            }
+            if (accepted) {
                 BookHelp.getContent(book, chapter)?.let {
                     contentLoadFinish(
                         book,
