@@ -90,15 +90,15 @@ class AboutFragment : PreferenceFragmentCompat() {
      */
     private fun checkUpdate() {
         if (BuildConfig.APPLICATION_ID.endsWith(".releaseA")) {
-            val fileName = "legado_live_update_test_${System.currentTimeMillis()}.apk"
+            val fileName = "legado_live_update_test_${System.currentTimeMillis()}.jar"
             showDialogFragment(
                 UpdateDialog(
                     AppUpdate.UpdateInfo(
-                        tagName = "ColorOS 16 实时通知验证",
-                        updateLog = "测试专用入口：仅验证应用更新下载的实时通知、取消和完成状态。下载完成后无需安装，此代码不会合入正式 PR。",
-                        downloadUrl = "https://github.com/LegadoTeam/legado/releases/download/3.26082102/legado_app_3.26082102_universal_releaseA.apk",
+                        tagName = "ColorOS 16 实时通知验证 v3",
+                        updateLog = "测试专用入口：从阿里云 Maven 下载公开的 Gradle 插件 JAR，仅验证实时通知、取消和完成状态。下载完成后无需打开，此代码不会合入正式 PR。",
+                        downloadUrl = "https://maven.aliyun.com/repository/google/com/android/tools/build/gradle/8.13.2/gradle-8.13.2.jar",
                         fileName = fileName,
-                        size = 26817114L
+                        size = 13116808L
                     )
                 )
             )
